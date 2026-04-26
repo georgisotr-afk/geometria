@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Геометрия в Ежедневието</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050508;
+    --gold: #FFD700;
+    --cyan: #00F5FF;
+    --magenta: #FF006E;
+    --white: #F0F0FF;
+    --grey: #1a1a2e;
+    --text: #c8c8e0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed;
+    width: 20px; height: 20px;
+    border: 2px solid var(--cyan);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-dot {
+    position: fixed;
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* PAGES */
+  .page {
+    min-height: 100vh;
+    display: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .page.active { display: flex; flex-direction: column; }
+
+  /* STARFIELD */
+  .stars {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ========== PAGE 1 ========== */
+  #page1 {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .hero-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 50% 40%, rgba(0,245,255,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, rgba(255,0,110,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(255,215,0,0.05) 0%, transparent 50%);
+  }
+
+  .geo-grid {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridMove 20s linear infinite;
+  }
+  @keyframes gridMove {
+    0% { transform: perspective(500px) rotateX(10deg) translateY(0); }
+    100% { transform: perspective(500px) rotateX(10deg) translateY(60px); }
+  }
+
+  .spinning-shape {
+    position: absolute;
+    border: 1px solid rgba(255,215,0,0.15);
+    animation: spin linear infinite;
+  }
+  .shape1 { width: 400px; height: 400px; top: -100px; right: -100px; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; animation-duration: 25s; }
+  .shape2 { width: 300px; height: 300px; bottom: -80px; left: -80px; border-radius: 50%; animation-duration: 18s; animation-direction: reverse; border-color: rgba(255,0,110,0.12); }
+  .shape3 { width: 200px; height: 200px; top: 20%; left: 5%; animation-duration: 30s; transform: rotate(45deg); border-color: rgba(0,245,255,0.1); }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  .hero-content { position: relative; z-index: 2; max-width: 800px; }
+
+  .tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 4px;
+    color: var(--cyan);
+    border: 1px solid rgba(0,245,255,0.3);
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 2rem;
+    animation: fadeUp 0.8s ease both;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    animation: fadeUp 0.8s 0.2s ease both;
+    letter-spacing: -2px;
+  }
+
+  h1 .highlight {
+    background: linear-gradient(135deg, var(--gold), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+    color: var(--text);
+    margin: 1.5rem 0 3rem;
+    line-height: 1.7;
+    font-weight: 300;
+    animation: fadeUp 0.8s 0.4s ease both;
+    max-width: 550px;
+    margin-left: auto; margin-right: auto;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Unbounded', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 16px 36px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.8s 0.6s ease both;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold), #ff9500);
+    color: #000;
+  }
+  .btn-primary:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 20px 40px rgba(255,215,0,0.3);
+  }
+  .btn-primary::after {
+    content: '→';
+    font-size: 1.1rem;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 3px;
+    color: rgba(255,255,255,0.3);
+    animation: fadeUp 1s 1s ease both;
+    z-index: 2;
+  }
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, rgba(255,215,0,0.5), transparent);
+    animation: scrollPulse 2s ease infinite;
+  }
+  @keyframes scrollPulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+  /* FLOATING MATH SYMBOLS */
+  .math-float {
+    position: absolute;
+    font-family: 'Space Mono', monospace;
+    font-size: 1.2rem;
+    color: rgba(0,245,255,0.12);
+    pointer-events: none;
+    animation: floatRandom linear infinite;
+    z-index: 1;
+  }
+  @keyframes floatRandom {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ========== PAGE 2 ========== */
+  #page2 {
+    flex-direction: column;
+    padding: 4rem 2rem;
+    align-items: center;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .page-header h2 {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    letter-spacing: -1px;
+  }
+
+  .page-header p {
+    color: var(--text);
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    font-weight: 300;
+  }
+
+  .golden-ratio-visual {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 900px;
+    margin-bottom: 3rem;
+  }
+
+  .phi-display {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  .phi-number {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(3rem, 10vw, 7rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--gold), #ffaa00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+  .phi-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    color: var(--text);
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 900px;
+    margin-bottom: 3rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 1.8rem;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--cyan));
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+  .card:hover {
+    border-color: rgba(255,215,0,0.2);
+    transform: translateY(-4px);
+    background: rgba(255,255,255,0.05);
+  }
+  .card:hover::before { transform: scaleX(1); }
+
+  .card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .card h3 {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    color: var(--gold);
+  }
+  .card p {
+    font-size: 0.9rem;
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  /* GOLDEN SPIRAL SVG */
+  .spiral-container {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+    position: relative;
+    z-index: 2;
+  }
+  .spiral-svg {
+    filter: drop-shadow(0 0 20px rgba(255,215,0,0.3));
+  }
+
+  /* INTERACTIVE PHI DEMO */
+  .phi-demo {
+    background: rgba(255,215,0,0.04);
+    border: 1px solid rgba(255,215,0,0.15);
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 900px;
+    width: 100%;
+    margin-bottom: 3rem;
+    position: relative;
+    z-index: 2;
+  }
+  .phi-demo h3 {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--gold);
+  }
+  .phi-bar-container {
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    height: 40px;
+    position: relative;
+    overflow: hidden;
+    margin: 1rem 0;
+  }
+  .phi-bar-a {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: linear-gradient(90deg, var(--gold), #ffaa00);
+    border-radius: 4px 0 0 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: #000;
+    font-weight: 700;
+    transition: width 0.5s ease;
+  }
+  .phi-bar-b {
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    background: rgba(0,245,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--white);
+    font-weight: 700;
+    transition: width 0.5s ease;
+  }
+  .phi-result {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    color: var(--cyan);
+    text-align: center;
+    margin-top: 0.5rem;
+  }
+  input[type=range] {
+    width: 100%;
+    accent-color: var(--gold);
+    margin: 0.5rem 0;
+  }
+
+  /* ========== PAGE 3 ========== */
+  #page3 {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 3rem 2rem;
+    background: #020204;
+  }
+
+  #page3 .page-header { margin-bottom: 2rem; }
+
+  .fractal-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    z-index: 2;
+  }
+
+  canvas#fractal {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid rgba(255,215,0,0.1);
+    display: block;
+    box-shadow: 0 0 60px rgba(0,245,255,0.1), 0 0 120px rgba(255,0,110,0.05);
+  }
+
+  .fractal-controls {
+    display: flex; gap: 1rem; justify-content: center;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+    z-index: 2;
+    position: relative;
+  }
+
+  .btn-fractal {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    padding: 10px 24px;
+    border: 1px solid var(--cyan);
+    background: transparent;
+    color: var(--cyan);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+  }
+  .btn-fractal:hover, .btn-fractal.active {
+    background: var(--cyan);
+    color: #000;
+    box-shadow: 0 0 20px rgba(0,245,255,0.3);
+  }
+
+  .fact-popup {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: rgba(5,5,8,0.95);
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 340px;
+    width: 90%;
+    text-align: center;
+    z-index: 100;
+    box-shadow: 0 0 40px rgba(255,215,0,0.2);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    backdrop-filter: blur(10px);
+  }
+  .fact-popup.show { transform: translate(-50%, -50%) scale(1); }
+  .fact-popup .fact-icon { font-size: 2.5rem; margin-bottom: 0.8rem; display: block; }
+  .fact-popup h4 {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 1rem;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+  .fact-popup p {
+    font-size: 0.9rem;
+    color: var(--text);
+    line-height: 1.6;
+    margin-bottom: 1.2rem;
+  }
+  .btn-continue {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    padding: 10px 24px;
+    border: none;
+    background: var(--gold);
+    color: #000;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.3s;
+    text-transform: uppercase;
+  }
+  .btn-continue:hover { transform: scale(1.05); }
+
+  .zoom-info {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.3);
+    text-align: center;
+    margin-bottom: 1rem;
+    letter-spacing: 2px;
+    z-index: 2;
+    position: relative;
+  }
+  #zoom-level { color: var(--cyan); }
+
+  .nav-back {
+    position: fixed;
+    top: 1.5rem; left: 1.5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.4);
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    gap: 6px;
+    z-index: 1000;
+    padding: 8px 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s;
+    text-transform: uppercase;
+  }
+  .nav-back:hover { color: var(--gold); border-color: rgba(255,215,0,0.3); }
+  .nav-back.visible { display: flex; }
+
+  .page-indicator {
+    position: fixed;
+    bottom: 1.5rem; right: 1.5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.2);
+    z-index: 1000;
+    text-transform: uppercase;
+  }
+
+  /* FRACTAL INFO */
+  .fractal-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    max-width: 700px;
+    width: 100%;
+    margin-top: 1.5rem;
+    z-index: 2;
+    position: relative;
+  }
+  .f-info-box {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .f-info-box .num {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--magenta);
+  }
+  .f-info-box .label {
+    font-size: 0.72rem;
+    color: var(--text);
+    margin-top: 0.3rem;
+    line-height: 1.4;
+  }
+
+  .photo-card {
+    cursor: zoom-in;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  .photo-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(255,215,0,0.3);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+  }
+  .photo-label {
+    padding: 0.7rem 1rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text);
+    letter-spacing: 1px;
+    background: rgba(255,255,255,0.03);
+  }
+
+  /* Transition overlay */
+  .transition-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: var(--bg);
+    z-index: 5000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .transition-overlay.fade-in { opacity: 1; pointer-events: all; }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<canvas class="stars" id="stars"></canvas>
+<div class="transition-overlay" id="transOverlay"></div>
+
+<div class="nav-back" id="navBack" onclick="goBack()">← Назад</div>
+<div class="page-indicator" id="pageIndicator">01 / 03</div>
+
+<!-- ======== PAGE 1 ======== -->
+<div class="page active" id="page1">
+  <div class="hero-bg"></div>
+  <div class="geo-grid"></div>
+  <div class="spinning-shape shape1"></div>
+  <div class="spinning-shape shape2"></div>
+  <div class="spinning-shape shape3"></div>
+
+  <div class="hero-content">
+    <div class="tag">⬡ STEAM Проект · 11 клас · 2026</div>
+    <h1>
+      <span class="highlight">Геометрия</span><br>
+      в Ежедневието
+    </h1>
+    <p class="subtitle">
+      Математиката не е само в учебниците. Тя е навсякъде около теб — в цветята, сградите, галактиките и дори в собственото ти лице.
+    </p>
+    <button class="btn btn-primary" onclick="goToPage(2)">
+      Открий я
+    </button>
+  </div>
+
+  <div class="scroll-hint">
+    <span>EXPLORE</span>
+    <div class="scroll-line"></div>
+  </div>
+</div>
+
+<!-- ======== PAGE 2 ======== -->
+<div class="page" id="page2">
+  <div class="hero-bg"></div>
+
+  <div class="page-header">
+    <div class="tag">φ ЗЛАТНОТО СЕЧЕНИЕ</div>
+    <h2>Числото, което е <span style="background: linear-gradient(135deg, var(--gold), #ffaa00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">навсякъде</span></h2>
+    <p>Едно число управлява красотата на Вселената</p>
+  </div>
+
+  <div class="phi-display">
+    <div class="phi-number">φ = 1.618...</div>
+    <div class="phi-label">Златното сечение · The Golden Ratio</div>
+  </div>
+
+  <!-- GOLDEN SPIRAL -->
+  <div class="spiral-container">
+    <svg class="spiral-svg" width="320" height="200" viewBox="0 0 320 200">
+      <defs>
+        <linearGradient id="spiralGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#00F5FF;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+      <!-- Golden rectangles -->
+      <rect x="10" y="10" width="195" height="180" fill="none" stroke="rgba(255,215,0,0.2)" stroke-width="1"/>
+      <rect x="10" y="10" width="120" height="120" fill="none" stroke="rgba(255,215,0,0.3)" stroke-width="1"/>
+      <rect x="130" y="10" width="75" height="75" fill="none" stroke="rgba(255,215,0,0.25)" stroke-width="1"/>
+      <rect x="130" y="85" width="46" height="46" fill="none" stroke="rgba(255,215,0,0.2)" stroke-width="1"/>
+      <rect x="176" y="85" width="29" height="29" fill="none" stroke="rgba(255,215,0,0.15)" stroke-width="1"/>
+      <!-- Spiral path -->
+      <path d="M 130 130 Q 10 130 10 10 Q 10 130 130 130" fill="none" stroke="url(#spiralGrad)" stroke-width="2.5" opacity="0.8"/>
+      <path d="M 130 130 Q 205 130 205 55 Q 205 10 130 10" fill="none" stroke="url(#spiralGrad)" stroke-width="2" opacity="0.7"/>
+      <path d="M 130 85 Q 130 130 176 130" fill="none" stroke="url(#spiralGrad)" stroke-width="1.5" opacity="0.6"/>
+
+      <!-- Labels -->
+      <text x="235" y="100" font-family="Space Mono" font-size="11" fill="rgba(255,255,255,0.5)">a + b</text>
+      <text x="235" y="115" font-family="Space Mono" font-size="10" fill="#FFD700">─────  = φ</text>
+      <text x="244" y="130" font-family="Space Mono" font-size="11" fill="rgba(255,255,255,0.5)">  a</text>
+    </svg>
+  </div>
+
+  <!-- PHOTO GALLERY -->
+  <div style="max-width:900px; width:100%; margin-bottom:3rem; position:relative; z-index:2;">
+    <div style="font-family:'Space Mono',monospace; font-size:0.7rem; letter-spacing:3px; color:var(--cyan); text-align:center; margin-bottom:1.5rem; text-transform:uppercase;">📸 φ в реалния свят</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+      <div class="photo-card" onclick="openPhoto('david-bridle-mLOK7pVhHTg-unsplash.jpg','🌿 Папратта — фрактал в природата')">
+        <img src="david-bridle-mLOK7pVhHTg-unsplash.jpg" alt="Папрат" style="width:100%;height:220px;object-fit:cover;border-radius:8px;display:block;">
+        <div class="photo-label">🌿 Папратта — фрактал в природата</div>
+      </div>
+      <div class="photo-card" onclick="openPhoto('ehsan-ahmadi-SotFdA_TAIA-unsplash.jpg','👤 Човешкото лице и φ')">
+        <img src="ehsan-ahmadi-SotFdA_TAIA-unsplash.jpg" alt="Лице" style="width:100%;height:220px;object-fit:cover;border-radius:8px;display:block;">
+        <div class="photo-label">👤 Човешкото лице и φ</div>
+      </div>
+      <div class="photo-card" onclick="openPhoto('content-pixie-2bKHyFH_S7o-unsplash.jpg','🐚 Наутилус — златната спирала')">
+        <img src="content-pixie-2bKHyFH_S7o-unsplash.jpg" alt="Наутилус" style="width:100%;height:220px;object-fit:cover;border-radius:8px;display:block;">
+        <div class="photo-label">🐚 Наутилус — златната спирала</div>
+      </div>
+      <div class="photo-card" onclick="openPhoto('federico-di-dio-photography-yJyXnySr2n8-unsplash.jpg','🏛️ Пантеонът — геометрия в архитектурата')">
+        <img src="federico-di-dio-photography-yJyXnySr2n8-unsplash.jpg" alt="Пантеон" style="width:100%;height:220px;object-fit:cover;border-radius:8px;display:block;">
+        <div class="photo-label">🏛️ Пантеонът — геометрия в архитектурата</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox" onclick="closeLightbox()" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.92);z-index:9000;align-items:center;justify-content:center;cursor:zoom-out;">
+    <img id="lightboxImg" src="" style="max-width:90vw;max-height:85vh;border-radius:12px;box-shadow:0 0 60px rgba(255,215,0,0.2);">
+    <div id="lightboxLabel" style="position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:0.8rem;color:rgba(255,255,255,0.6);letter-spacing:2px;"></div>
+  </div>
+
+  <!-- CARDS -->
+  <div class="cards-grid">
+    <div class="card">
+      <span class="card-icon">🌻</span>
+      <h3>Слънчоглед</h3>
+      <p>Семената на слънчогледа са наредени в 34 и 55 спирали — последователни числа на Фибоначи, чието отношение → φ</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🏛️</span>
+      <h3>Партенонът</h3>
+      <p>Пропорциите на гръцкия храм следват точно златното сечение. Архитектите от 432 г. пр. Хр. са знаели тайната!</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🐚</span>
+      <h3>Черупки</h3>
+      <p>Наутилусът расте по логаритмична спирала с коефициент φ. Природата е избрала най-ефективната форма.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🤳</span>
+      <h3>Човешкото лице</h3>
+      <p>Разстоянието между очите, носа и устата следва пропорции, близки до φ. Лица по-близки до 1.618 ни се струват по-красиви.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">📱</span>
+      <h3>Дизайн & UI</h3>
+      <p>Twitter, Apple, National Geographic — логата им използват φ в пропорциите. Дизайнерите знаят тайната.</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🎵</span>
+      <h3>Музика</h3>
+      <p>Моцарт и Дебюси са поставяли кулминациите на своите произведения точно на 61.8% от общата им дължина.</p>
+    </div>
+  </div>
+
+  <button class="btn btn-primary" onclick="goToPage(3)" style="margin-bottom:3rem;">
+    Към Фракталите
+  </button>
+</div>
+
+<!-- ======== PAGE 3 ======== -->
+<div class="page" id="page3">
+  <div class="page-header">
+    <div class="tag">∞ ФРАКТАЛИ</div>
+    <h2 style="font-family:'Unbounded',sans-serif; font-size:clamp(1.8rem,4vw,3rem); font-weight:900;">Безкрайната <span style="color:var(--magenta)">сложност</span></h2>
+    <p style="color:var(--text); margin-top:0.5rem;">Мандалброт — най-известният фрактал в математиката</p>
+  </div>
+
+  <div class="zoom-info">ZOOM: <span id="zoom-level">1×</span></div>
+
+  <div class="fractal-wrapper">
+    <canvas id="fractal" width="700" height="500"></canvas>
+
+    <!-- FACT POPUP -->
+    <div class="fact-popup" id="factPopup">
+      <span class="fact-icon" id="factIcon">🤯</span>
+      <h4 id="factTitle">Интересен факт!</h4>
+      <p id="factText">...</p>
+      <button class="btn-continue" onclick="continueFractal()">Продължи зума →</button>
+    </div>
+  </div>
+
+  <div class="fractal-controls">
+    <button class="btn-fractal active" id="btnStart" onclick="startZoom()">▶ Стартирай зума</button>
+    <button class="btn-fractal" onclick="resetFractal()">↺ Рестарт</button>
+  </div>
+
+  <div class="fractal-info-grid">
+    <div class="f-info-box">
+      <div class="num">∞</div>
+      <div class="label">Безкрайна граница в краен периметър</div>
+    </div>
+    <div class="f-info-box">
+      <div class="num">1980</div>
+      <div class="label">Година на публикуване от Манделброт</div>
+    </div>
+    <div class="f-info-box">
+      <div class="num">1.618</div>
+      <div class="label">φ се среща и в самия фрактал</div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openPhoto(src, label) {
+  const lb = document.getElementById('lightbox');
+  document.getElementById('lightboxImg').src = src;
+  document.getElementById('lightboxLabel').textContent = label;
+  lb.style.display = 'flex';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').style.display = 'none';
+}
+
+// ========== CURSOR ==========
+const cursor = document.getElementById('cursor');
+const cursorDot = document.getElementById('cursorDot');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX - 10 + 'px';
+  cursor.style.top = e.clientY - 10 + 'px';
+  cursorDot.style.left = e.clientX - 3 + 'px';
+  cursorDot.style.top = e.clientY - 3 + 'px';
+});
+
+// ========== STARS ==========
+const starsCanvas = document.getElementById('stars');
+const sCtx = starsCanvas.getContext('2d');
+starsCanvas.width = window.innerWidth;
+starsCanvas.height = window.innerHeight;
+const starsList = Array.from({length: 150}, () => ({
+  x: Math.random() * starsCanvas.width,
+  y: Math.random() * starsCanvas.height,
+  r: Math.random() * 1.2,
+  o: Math.random(),
+  s: Math.random() * 0.005 + 0.001
+}));
+function drawStars() {
+  sCtx.clearRect(0,0,starsCanvas.width,starsCanvas.height);
+  starsList.forEach(s => {
+    s.o += s.s;
+    if(s.o > 1 || s.o < 0) s.s *= -1;
+    sCtx.beginPath();
+    sCtx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    sCtx.fillStyle = `rgba(255,255,255,${s.o * 0.6})`;
+    sCtx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+
+// ========== MATH FLOATS ==========
+const symbols = ['π', 'φ', '∞', '√', 'Σ', 'θ', 'Δ', '∫', 'λ', '∂', '≈', '×'];
+function spawnMath() {
+  const el = document.createElement('div');
+  el.className = 'math-float';
+  el.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+  el.style.left = Math.random() * 100 + 'vw';
+  el.style.animationDuration = (12 + Math.random() * 10) + 's';
+  el.style.animationDelay = '0s';
+  el.style.fontSize = (0.8 + Math.random() * 1.5) + 'rem';
+  document.getElementById('page1').appendChild(el);
+  setTimeout(() => el.remove(), 25000);
+}
+setInterval(spawnMath, 1500);
+
+// ========== NAVIGATION ==========
+let currentPage = 1;
+const overlay = document.getElementById('transOverlay');
+
+function goToPage(n) {
+  overlay.classList.add('fade-in');
+  setTimeout(() => {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page' + n).classList.add('active');
+    currentPage = n;
+    document.getElementById('pageIndicator').textContent = '0' + n + ' / 03';
+    const nb = document.getElementById('navBack');
+    if(n > 1) nb.classList.add('visible'); else nb.classList.remove('visible');
+    window.scrollTo(0,0);
+    overlay.classList.remove('fade-in');
+    if(n === 3) initFractal();
+  }, 400);
+}
+
+function goBack() {
+  if(currentPage > 1) goToPage(currentPage - 1);
+}
+
+// ========== MANDELBROT ==========
+const fc = document.getElementById('fractal');
+const fCtx = fc.getContext('2d');
+const W = 700, H = 500;
+
+let zoomState = {
+  cx: -0.7269, cy: 0.1889,
+  size: 3.0,
+  targetSize: 3.0,
+  animating: false,
+  phase: 0,
+  factShown: false
+};
+
+const facts = [
+  {
+    icon: '🤯',
+    title: 'Безкрайна граница!',
+    text: 'Границата на множеството Манделброт е БЕЗКРАЙНО дълга — колкото повече зуумваш, толкова повече детайли се появяват. Никога не свършва!'
+  },
+  {
+    icon: '🌿',
+    title: 'Срещаш го в природата!',
+    text: 'Броколи романеско, крайбрежни линии, бели дробове, мълнии — всички са фрактали! Природата използва самоподобие за ефективност.'
+  },
+  {
+    icon: '💻',
+    title: 'Компресия на данни!',
+    text: 'Фракталните алгоритми се използват за компресия на изображения. Едно малко уравнение може да опише изключително сложни форми!'
+  }
+];
+
+let factIndex = 0;
+let zoomInterval = null;
+let currentZoom = 1;
+
+function mandelbrot(cx, cy, maxIter) {
+  let x = 0, y = 0, iter = 0;
+  while(x*x + y*y <= 4 && iter < maxIter) {
+    let tmp = x*x - y*y + cx;
+    y = 2*x*y + cy;
+    x = tmp;
+    iter++;
+  }
+  return iter;
+}
+
+function drawMandelbrot(centerX, centerY, size) {
+  const maxIter = 80;
+  const imgData = fCtx.createImageData(W, H);
+  const data = imgData.data;
+
+  for(let py = 0; py < H; py++) {
+    for(let px = 0; px < W; px++) {
+      const cx = centerX + (px / W - 0.5) * size * (W/H);
+      const cy = centerY + (py / H - 0.5) * size;
+      const m = mandelbrot(cx, cy, maxIter);
+      const idx = (py * W + px) * 4;
+
+      if(m === maxIter) {
+        data[idx] = 2; data[idx+1] = 2; data[idx+2] = 8; data[idx+3] = 255;
+      } else {
+        const t = m / maxIter;
+        const r = Math.floor(9 * (1-t) * t*t*t * 255);
+        const g = Math.floor(15 * (1-t)*(1-t) * t*t * 255);
+        const b = Math.floor(8.5 * (1-t)*(1-t)*(1-t) * t * 255);
+        // Color boost for drama
+        data[idx]   = Math.min(255, r + Math.floor(t * 40));
+        data[idx+1] = Math.min(255, g + Math.floor(t * 80));
+        data[idx+2] = Math.min(255, b + Math.floor(200 * Math.pow(t, 0.3)));
+        data[idx+3] = 255;
+      }
+    }
+  }
+  fCtx.putImageData(imgData, 0, 0);
+}
+
+function initFractal() {
+  zoomState.size = 3.0;
+  currentZoom = 1;
+  factIndex = 0;
+  document.getElementById('zoom-level').textContent = '1×';
+  document.getElementById('factPopup').classList.remove('show');
+  drawMandelbrot(zoomState.cx, zoomState.cy, zoomState.size);
+}
+
+const zoomStops = [80, 800, 5000];
+
+function startZoom() {
+  if(zoomInterval) clearInterval(zoomInterval);
+  document.getElementById('btnStart').textContent = '⏸ Зуумва...';
+
+  zoomInterval = setInterval(() => {
+    zoomState.size *= 0.97;
+    currentZoom = Math.round(3.0 / zoomState.size);
+    document.getElementById('zoom-level').textContent = currentZoom + '×';
+    drawMandelbrot(zoomState.cx, zoomState.cy, zoomState.size);
+
+    if(factIndex < zoomStops.length && currentZoom >= zoomStops[factIndex]) {
+      clearInterval(zoomInterval);
+      zoomInterval = null;
+      showFact(factIndex);
+    }
+  }, 60);
+}
+
+function showFact(idx) {
+  const f = facts[idx];
+  document.getElementById('factIcon').textContent = f.icon;
+  document.getElementById('factTitle').textContent = f.title;
+  document.getElementById('factText').textContent = f.text;
+  document.getElementById('factPopup').classList.add('show');
+}
+
+function continueFractal() {
+  const popup = document.getElementById('factPopup');
+  popup.classList.remove('show');
+  factIndex++;
+  setTimeout(() => {
+    if(factIndex < zoomStops.length) {
+      startZoom();
+    } else {
+      document.getElementById('btnStart').textContent = '✓ Финал!';
+      document.getElementById('zoom-level').textContent = currentZoom + '× — Безкрайно!';
+    }
+  }, 450);
+}
+
+function resetFractal() {
+  if(zoomInterval) clearInterval(zoomInterval);
+  zoomInterval = null;
+  document.getElementById('factPopup').classList.remove('show');
+  document.getElementById('btnStart').textContent = '▶ Стартирай зума';
+  initFractal();
+}
+</script>
+</body>
+</html>
