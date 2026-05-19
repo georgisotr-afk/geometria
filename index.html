@@ -274,6 +274,60 @@ h1 .highlight {
   color:rgba(255,255,255,0.2); z-index:1000; text-transform:uppercase;
 }
 
+/* ── PAGE 2 NEW STYLES ── */
+.p2-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 4px;
+  color: var(--cyan); text-transform: uppercase;
+  margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem;
+}
+.p2-eyebrow::after { content:''; flex:0 0 40px; height:1px; background:var(--cyan); opacity:0.3; }
+.p2-split {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2rem; align-items: start;
+}
+@media(max-width:640px){ .p2-split{ grid-template-columns:1fr; } }
+.p2-text {}
+.p2-body { font-size:0.95rem; color:var(--text); line-height:1.8; font-weight:300; }
+.p2-body em { color:var(--white); font-style:normal; }
+.p2-body strong { color:var(--gold); font-weight:600; }
+
+/* FIB SEQUENCE */
+.fib-sequence {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; align-content: flex-start;
+}
+.fib-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem; font-weight: 700;
+  padding: 6px 12px; border-radius: 6px;
+  border: 1px solid rgba(255,215,0,0.2);
+  background: rgba(255,215,0,0.05);
+  color: var(--gold);
+  opacity: 0; transform: translateY(10px);
+  transition: opacity 0.4s ease, transform 0.4s ease, background 0.3s;
+}
+.fib-num.visible { opacity:1; transform:translateY(0); }
+.fib-num.big { background:rgba(255,215,0,0.15); border-color:rgba(255,215,0,0.5); font-size:1rem; }
+.fib-plus {
+  font-family: 'Space Mono', monospace; font-size:0.7rem;
+  color:rgba(255,255,255,0.2); align-self:center;
+}
+
+/* WHY GRID */
+.why-grid { display:flex; flex-direction:column; gap:1.5rem; }
+.why-card {
+  display: flex; gap: 1.5rem; align-items: flex-start;
+  padding: 1.5rem; border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+  transition: all 0.3s ease;
+}
+.why-card:hover { background:rgba(255,215,0,0.03); border-color:rgba(255,215,0,0.15); transform:translateX(4px); }
+.why-icon { font-size:2rem; flex-shrink:0; }
+.why-title { font-family:'Unbounded',sans-serif; font-size:1rem; font-weight:700; color:var(--gold); margin-bottom:0.5rem; }
+.why-text { font-size:0.88rem; color:var(--text); line-height:1.7; font-weight:300; }
+.why-text strong { color:var(--white); font-weight:600; }
+
 /* TRANSITION */
 .transition-overlay {
   position:fixed; inset:0; background:var(--bg);
@@ -303,7 +357,7 @@ h1 .highlight {
   <div class="spinning-shape shape2"></div>
   <div class="spinning-shape shape3"></div>
   <div class="hero-content">
-    <div class="tag">⬡ STEAM Проект · 11а клас · 16.06.2026 · Георги Сотиров</div>
+    <div class="tag">⬡ STEAM Проект · 11 клас · 2026</div>
     <h1><span class="highlight">Геометрия</span><br>в Ежедневието</h1>
     <p class="subtitle">Математиката не е скучна. Тя е навсякъде — и ти дори не си го забелязал. 👀</p>
     <button class="btn btn-primary" onclick="goToPage(2)">Открий я</button>
@@ -317,41 +371,89 @@ h1 .highlight {
 <!-- PAGE 2 -->
 <div class="page" id="page2">
   <div class="hero-bg"></div>
-  <div class="page-header">
-    <div class="tag">φ ЗЛАТНОТО СЕЧЕНИЕ</div>
-    <h2>Числото, което е <span style="background:linear-gradient(135deg,var(--gold),#ffaa00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">навсякъде</span></h2>
-    <p>Едно число управлява всичко красиво🔥</p>
+
+  <div class="page-header" style="padding-top:2rem;">
+    <div class="tag">φ ФИБОНАЧИ · ЗЛАТНОТО СЕЧЕНИЕ</div>
+    <h2>Отпечатъкът<br>на <span style="background:linear-gradient(135deg,var(--gold),#ffaa00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">природата</span></h2>
+    <p>Едно просто правило. Безкрайно много съвпадения. No cap. 🔥</p>
   </div>
 
-  <div class="big-display">
-    <div class="big-number">φ = 1.618...</div>
-    <div class="big-label">Природата го използва навсякъде. Ти просто не си го знаел. 🌀</div>
+  <!-- 01 WHAT IS FIBONACCI -->
+  <div style="max-width:900px;width:100%;padding:0 2rem;margin-bottom:3rem;position:relative;z-index:2;">
+    <div class="p2-eyebrow">01 — Какво е редицата на Фибоначи?</div>
+    <div class="p2-split">
+      <div class="p2-text">
+        <p class="p2-body">Представи си охлюв. Всяка нова черупка е <em>сбор от двете предишни</em>. Точно така работи и редицата на Фибоначи — всяко число е сума от двете преди него.</p>
+        <p class="p2-body" style="margin-top:1rem;">Открита от Леонардо Фибоначи през 1202 г. — но природата я използва от <strong>милиарди години</strong> преди него. 💀</p>
+      </div>
+      <div class="fib-sequence" id="fibViz"></div>
+    </div>
   </div>
 
-  <div class="spiral-container">
-    <svg class="spiral-svg" width="320" height="200" viewBox="0 0 320 200">
-      <defs>
-        <linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style="stop-color:#FFD700"/>
-          <stop offset="100%" style="stop-color:#00F5FF"/>
-        </linearGradient>
-      </defs>
-      <rect x="10" y="10" width="195" height="180" fill="none" stroke="rgba(255,215,0,0.2)" stroke-width="1"/>
-      <rect x="10" y="10" width="120" height="120" fill="none" stroke="rgba(255,215,0,0.3)" stroke-width="1"/>
-      <rect x="130" y="10" width="75" height="75" fill="none" stroke="rgba(255,215,0,0.25)" stroke-width="1"/>
-      <rect x="130" y="85" width="46" height="46" fill="none" stroke="rgba(255,215,0,0.2)" stroke-width="1"/>
-      <rect x="176" y="85" width="29" height="29" fill="none" stroke="rgba(255,215,0,0.15)" stroke-width="1"/>
-      <path d="M 130 130 Q 10 130 10 10 Q 10 130 130 130" fill="none" stroke="url(#sg)" stroke-width="2.5" opacity="0.8"/>
-      <path d="M 130 130 Q 205 130 205 55 Q 205 10 130 10" fill="none" stroke="url(#sg)" stroke-width="2" opacity="0.7"/>
-      <path d="M 130 85 Q 130 130 176 130" fill="none" stroke="url(#sg)" stroke-width="1.5" opacity="0.6"/>
-      <text x="235" y="100" font-family="Space Mono" font-size="11" fill="rgba(255,255,255,0.5)">a + b</text>
-      <text x="235" y="115" font-family="Space Mono" font-size="10" fill="#FFD700">─────  = φ</text>
-      <text x="244" y="130" font-family="Space Mono" font-size="11" fill="rgba(255,255,255,0.5)">  a</text>
-    </svg>
+  <!-- 02 THE MAGIC RATIO -->
+  <div style="max-width:900px;width:100%;padding:2rem;margin-bottom:3rem;position:relative;z-index:2;border-radius:16px;border:1px solid rgba(255,215,0,0.1);background:rgba(255,215,0,0.03);">
+    <div class="p2-eyebrow" style="color:var(--gold);">02 — The magic trick 🪄</div>
+    <p class="p2-body" style="margin-bottom:1.5rem;">Вземи всяко число от редицата. Раздели го на предишното. Получаваш винаги почти едно и също число...</p>
+    <div style="display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap;margin:1.5rem 0;">
+      <div style="text-align:center;">
+        <div style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--text);margin-bottom:0.5rem;">8 ÷ 5 =</div>
+        <div style="font-family:'Unbounded',sans-serif;font-size:2rem;color:var(--gold);">1.6</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--text);margin-bottom:0.5rem;">13 ÷ 8 =</div>
+        <div style="font-family:'Unbounded',sans-serif;font-size:2rem;color:var(--gold);">1.625</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--text);margin-bottom:0.5rem;">144 ÷ 89 =</div>
+        <div style="font-family:'Unbounded',sans-serif;font-size:2rem;color:var(--gold);">1.6179...</div>
+      </div>
+      <div style="text-align:center;border:1px solid rgba(255,215,0,0.3);border-radius:12px;padding:1rem 1.5rem;background:rgba(255,215,0,0.05);">
+        <div style="font-family:'Space Mono',monospace;font-size:0.7rem;color:var(--text);margin-bottom:0.5rem;">→ → →</div>
+        <div style="font-family:'Unbounded',sans-serif;font-size:2.5rem;background:linear-gradient(135deg,var(--gold),#ffaa00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">φ = 1.618</div>
+        <div style="font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--text);margin-top:0.3rem;letter-spacing:2px;">ЗЛАТНОТО СЕЧЕНИЕ</div>
+      </div>
+    </div>
+    <p style="text-align:center;color:var(--text);font-size:0.85rem;font-weight:300;">Колкото по-нагоре в редицата — толкова по-близо до 1.618. <em style="color:var(--white);">Завинаги.</em> 🤯</p>
   </div>
 
+  <!-- 03 SPIRAL CANVAS -->
+  <div style="position:relative;z-index:2;margin-bottom:3rem;text-align:center;width:100%;max-width:900px;padding:0 2rem;">
+    <div class="p2-eyebrow" style="justify-content:center;margin-bottom:1rem;">03 — Златната спирала</div>
+    <canvas id="spiralCanvas" width="360" height="300" style="border-radius:12px;display:block;margin:0 auto;filter:drop-shadow(0 0 20px rgba(255,215,0,0.2));max-width:100%;"></canvas>
+    <p style="font-family:'Space Mono',monospace;font-size:0.62rem;letter-spacing:2px;color:var(--text);margin-top:1rem;">Правоъгълници с пропорция φ → спиралата се появява автоматично ✨</p>
+  </div>
+
+  <!-- 04 WHY IT MATTERS -->
+  <div style="max-width:900px;width:100%;padding:0 2rem;margin-bottom:3rem;position:relative;z-index:2;">
+    <div class="p2-eyebrow" style="margin-bottom:2rem;">04 — Защо има значение?</div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">🌿</div>
+        <div>
+          <h3 class="why-title">Природата</h3>
+          <p class="why-text">Слънчогледът има <strong>34 и 55 спирали</strong> — числа на Фибоначи. Шишарките, ананасите, листата — всичко следва тази редица. Природата е оптимизирала пространството преди нас.</p>
+        </div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🌌</div>
+        <div>
+          <h3 class="why-title">Вселената</h3>
+          <p class="why-text">Галактиките се завиват по <strong>логаритмична спирала</strong> с φ пропорция. Ураганите, торнадата, дори черупката на охлюва — всички следват един и същ математически модел.</p>
+        </div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">😏</div>
+        <div>
+          <h3 class="why-title">Твоето лице</h3>
+          <p class="why-text">Разстоянието между очите, носа и брадичката следва пропорции близки до <strong>1.618</strong>. Apple, Instagram — логата им са дизайнирани с φ. Мозъкът ти го намира красиво. Буквално science.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHOTOS -->
   <div class="photo-grid">
-    <div class="photo-grid-label">📸 забелязано наоколо</div>
+    <div class="photo-grid-label">📸 spotted in the wild</div>
     <div class="photo-grid-inner">
       <div class="photo-card" onclick="openPhoto('david-bridle-mLOK7pVhHTg-unsplash.jpg','🌿 Папратта — фрактал в природата')">
         <img src="david-bridle-mLOK7pVhHTg-unsplash.jpg" alt="Папрат">
@@ -372,44 +474,107 @@ h1 .highlight {
     </div>
   </div>
 
-  <div class="cards-grid">
-    <div class="card"><span class="card-icon">🌻</span><h3>Слънчоглед</h3><p>34 и 55 спирали. Числата на Фибоначи🌻</p></div>
-    <div class="card"><span class="card-icon">🏛️</span><h3>Партенонът</h3><p>432 г. пр. Хр. Нямало калкулатори, но φ — имало. 💀</p></div>
-    <div class="card"><span class="card-icon">🐚</span><h3>Черупки</h3><p>Наутилусът расте точно по φ спирала. Природата не прави грешки. ✨</p></div>
-    <div class="card"><span class="card-icon">🤳</span><h3>Твоето лице</h3><p>Колкото по-близо до 1.618 — толкова по-красиви сте😏</p></div>
-    <div class="card"><span class="card-icon">📱</span><h3>Apple & Twitter</h3><p>Логата им са направени с φ. Дизайнерите знаят нещо, което ти не. 🍎</p></div>
-    <div class="card"><span class="card-icon">🎵</span><h3>Музика</h3><p>Моцарт слагал beat drop-а точно на 61.8%. 🎶</p></div>
-  </div>
-
-  <button class="btn btn-primary" onclick="goToPage(3)" style="margin-bottom:3rem;">Към Фракталите</button>
+  <button class="btn btn-primary" onclick="goToPage(3)" style="margin-bottom:3rem;">Към Фракталите →</button>
 </div>
 
 <!-- PAGE 3 -->
 <div class="page" id="page3">
-  <div class="hero-bg" style="background:radial-gradient(ellipse at 50% 40%,rgba(255,0,110,0.08) 0%,transparent 60%),radial-gradient(ellipse at 20% 80%,rgba(0,245,255,0.06) 0%,transparent 50%);"></div>
+  <div class="hero-bg" style="background:radial-gradient(ellipse at 50% 30%,rgba(255,0,110,0.1) 0%,transparent 55%),radial-gradient(ellipse at 80% 70%,rgba(0,245,255,0.07) 0%,transparent 50%),radial-gradient(ellipse at 10% 60%,rgba(120,0,255,0.06) 0%,transparent 50%);"></div>
 
-  <div class="page-header">
-    <div class="tag" style="color:var(--magenta);border-color:rgba(255,0,110,0.3);">∞ ФРАКТАЛИ</div>
-    <h2>Безкрайната <span style="color:var(--magenta)">сложност</span></h2>
-    <p>Zoom in-вай колкото искаш — никога не свършва. Literally. 🤯</p>
+  <!-- HEADER -->
+  <div class="page-header" style="padding-top:2rem;">
+    <div class="tag" style="color:var(--magenta);border-color:rgba(255,0,110,0.3);">∞ ФРАКТАЛИ · БЕЗКРАЙНА СЛОЖНОСТ</div>
+    <h2>Безкрайността в<br><span style="background:linear-gradient(135deg,var(--magenta),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">дланта ти</span></h2>
+    <p>Zoom in колкото искаш — никога не свършва. Literally. 🤯</p>
   </div>
 
-  <div class="big-display">
-    <div class="big-number magenta">z = z² + c</div>
-    <div class="big-label">Това малко уравнение прави безкрайна сложност 🌀</div>
+  <!-- 01 КАКВО Е ФРАКТАЛ -->
+  <div style="max-width:900px;width:100%;padding:0 2rem;margin-bottom:3rem;position:relative;z-index:2;">
+    <div class="p2-eyebrow" style="color:var(--magenta);">01 — Какво е фрактал?</div>
+    <div class="p2-split">
+      <div class="p2-text">
+        <p class="p2-body">Представи си папрат. Откъснеш едно клонче — изглежда като цялото растение. Откъснеш по-малко — пак същото. <em>Безкрайно.</em></p>
+        <p class="p2-body" style="margin-top:1rem;">Това е <strong>самоподобие</strong> — основното свойство на фракталите. Структурата се повтаря на всяко ниво на увеличение. Природата го използва за максимална ефективност.</p>
+        <p class="p2-body" style="margin-top:1rem;color:var(--text);font-size:0.85rem;">Думата "фрактал" идва от латинското <em style="color:var(--white)">fractus</em> — счупен. Въведена от Беноа Манделброт през 1975. 💀</p>
+      </div>
+      <!-- SELF-SIMILARITY VIZ -->
+      <div style="display:flex;flex-direction:column;gap:0.8rem;align-items:flex-start;">
+        <div style="font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:3px;color:var(--magenta);text-transform:uppercase;margin-bottom:0.3rem;">Самоподобие →</div>
+        <div class="self-sim-row">
+          <div class="self-sim-box big" style="background:rgba(255,0,110,0.12);border-color:rgba(255,0,110,0.3);">
+            <span>🌿</span><span style="font-size:0.6rem;color:var(--text);">цялото</span>
+          </div>
+          <div style="color:var(--text);font-size:1rem;">→</div>
+          <div class="self-sim-box med" style="background:rgba(255,0,110,0.08);border-color:rgba(255,0,110,0.2);">
+            <span style="font-size:1.2rem;">🌿</span>
+          </div>
+          <div style="color:var(--text);font-size:1rem;">→</div>
+          <div class="self-sim-box sm" style="background:rgba(255,0,110,0.05);border-color:rgba(255,0,110,0.15);">
+            <span style="font-size:0.8rem;">🌿</span>
+          </div>
+          <div style="color:var(--text);font-size:1rem;">→ ∞</div>
+        </div>
+        <div style="font-family:'Space Mono',monospace;font-size:0.6rem;color:var(--text);margin-top:0.5rem;">Всяка част = копие на цялото</div>
+      </div>
+    </div>
   </div>
 
-  <div class="cards-grid">
-    <div class="frac-card"><div class="frac-card-num">01</div><span class="frac-card-icon">🌿</span><h3 class="frac-card-title">Самоподобие</h3><p class="frac-card-text">Zoom in, zoom out — изглежда еднакво. Папратта го прави от милиони години. 🌿</p><span class="frac-tag">природа</span></div>
-    <div class="frac-card"><div class="frac-card-num">02</div><span class="frac-card-icon">⚡</span><h3 class="frac-card-title">Безкрайна граница</h3><p class="frac-card-text">Краен размер, безкраен периметър. Математиката е доста счупена но, по най-добрия начин. ⚡</p><span class="frac-tag">математика</span></div>
-    <div class="frac-card"><div class="frac-card-num">03</div><span class="frac-card-icon">🫁</span><h3 class="frac-card-title">В теб</h3><p class="frac-card-text">Белите ти дробове са фрактал. 70 кв.м. повърхност в гърдите ти 🫁</p><span class="frac-tag">биология</span></div>
-    <div class="frac-card"><div class="frac-card-num">04</div><span class="frac-card-icon">❄️</span><h3 class="frac-card-title">Снежинката на Кох</h3><p class="frac-card-text">Добавяш триъгълници безкрайно. Периметърът → ∞, площта остава крайна ❄️</p><span class="frac-tag">математика</span></div>
-    <div class="frac-card"><div class="frac-card-num">05</div><span class="frac-card-icon">🥦</span><h3 class="frac-card-title">Романеско</h3><p class="frac-card-text">Зеленчук, който е едновременно фрактал и следва φ "Main character energy". 🥦</p><span class="frac-tag">природа · φ</span></div>
-    <div class="frac-card"><div class="frac-card-num">06</div><span class="frac-card-icon">🌌</span><h3 class="frac-card-title">Галактики</h3><p class="frac-card-text">Цялата Вселена е фрактал. Буквално. Галактики в купове в суперкупове 🌌</p><span class="frac-tag">космос</span></div>
+  <!-- 02 УРАВНЕНИЕТО -->
+  <div style="max-width:900px;width:100%;padding:2rem;margin-bottom:3rem;position:relative;z-index:2;border-radius:16px;border:1px solid rgba(255,0,110,0.12);background:rgba(255,0,110,0.03);">
+    <div class="p2-eyebrow" style="color:var(--magenta);">02 — Уравнението на безкрайността 🧮</div>
+    <p class="p2-body" style="margin-bottom:1.5rem;">Вземи едно число. Сложи го в уравнение. Резултата върни обратно в уравнението. Повтори <em>безкрайно</em>. Това е рекурсия.</p>
+    <div style="display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin:1.5rem 0;">
+      <div style="text-align:center;padding:1rem 1.5rem;border:1px solid rgba(0,245,255,0.2);border-radius:12px;background:rgba(0,245,255,0.04);">
+        <div style="font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--text);margin-bottom:0.5rem;">Манделброт</div>
+        <div style="font-family:'Unbounded',sans-serif;font-size:1.6rem;background:linear-gradient(135deg,var(--magenta),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">z = z² + c</div>
+      </div>
+      <div style="text-align:center;padding:1rem 1.5rem;border:1px solid rgba(255,215,0,0.2);border-radius:12px;background:rgba(255,215,0,0.04);">
+        <div style="font-family:'Space Mono',monospace;font-size:0.65rem;color:var(--text);margin-bottom:0.5rem;">Итерация</div>
+        <div style="font-family:'Space Mono',monospace;font-size:0.85rem;color:var(--gold);line-height:1.8;">z₀ = 0<br>z₁ = 0² + c = c<br>z₂ = c² + c<br>z₃ = (c²+c)² + c<br><span style="color:var(--text);">→ ∞</span></div>
+      </div>
+    </div>
+    <p style="text-align:center;color:var(--text);font-size:0.85rem;font-weight:300;">Ако числото расте → точката е <em style="color:var(--white);">извън</em> фрактала. Ако остава малко → тя е <em style="color:var(--magenta);">вътре</em>. Оцвети всяка точка → получаваш Манделброт. 🤯</p>
   </div>
 
+  <!-- 03 INTERACTIVE FRACTAL TREE -->
+  <div style="max-width:900px;width:100%;padding:0 2rem;margin-bottom:3rem;position:relative;z-index:2;">
+    <div class="p2-eyebrow" style="color:var(--cyan);">03 — Фрактално дърво · мести мишката 🖱️</div>
+    <p class="p2-body" style="margin-bottom:1rem;">Движи мишката наляво/надясно над платното — ъгълът на разклоненията се променя в реално време.</p>
+    <canvas id="fractalTree" width="860" height="340" style="width:100%;border-radius:12px;background:rgba(0,0,0,0.3);border:1px solid rgba(0,245,255,0.08);display:block;cursor:crosshair;"></canvas>
+    <p style="font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:2px;color:var(--text);margin-top:0.8rem;">Всяко клонче се разделя на две → същото повторено 10 пъти → фрактал ✨</p>
+  </div>
+
+  <!-- 04 WHERE FRACTALS APPEAR -->
+  <div style="max-width:900px;width:100%;padding:0 2rem;margin-bottom:3rem;position:relative;z-index:2;">
+    <div class="p2-eyebrow" style="color:var(--cyan);margin-bottom:2rem;">04 — Фрактали около теб</div>
+    <div class="why-grid">
+      <div class="why-card" style="border-color:rgba(0,245,255,0.08);">
+        <div class="why-icon">🫁</div>
+        <div>
+          <h3 class="why-title" style="color:var(--cyan);">Биология</h3>
+          <p class="why-text">Белите дробове се разклоняват <strong>23 пъти фрактално</strong> — така 70 кв.м. повърхност се събира в гърдите ти. Невроните, кръвоносните съдове, ретината — всичко е фрактал. You're built different. 🫁</p>
+        </div>
+      </div>
+      <div class="why-card" style="border-color:rgba(255,0,110,0.08);">
+        <div class="why-icon">🏔️</div>
+        <div>
+          <h3 class="why-title" style="color:var(--magenta);">Геология</h3>
+          <p class="why-text">Крайбрежната линия на Великобритания е <strong>безкрайно дълга</strong> — колкото по-малка е линийката, толкова по-голяма е дължината. Планинските вериги, реките, каньоните — всичко е фрактал.</p>
+        </div>
+      </div>
+      <div class="why-card" style="border-color:rgba(255,215,0,0.08);">
+        <div class="why-icon">🥦</div>
+        <div>
+          <h3 class="why-title" style="color:var(--gold);">Ботаника</h3>
+          <p class="why-text">Романеско, папрат, броколи — всяка пъпка е точно копие на цялото растение в по-малък мащаб. Природата е намерила <strong>най-ефективния начин</strong> за растеж преди математиката да го докаже.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAROUSEL -->
   <div class="carousel-wrap">
-    <div class="carousel-label">📸 фрактали са literally навсякъде</div>
+    <div class="carousel-label" style="color:var(--magenta);">📸 фрактали са literally навсякъде</div>
     <div class="carousel-outer">
       <div class="carousel-track">
         <div class="carousel-slide"><img src="david-bridle-mLOK7pVhHTg-unsplash.jpg" alt="Папрат"><div class="carousel-caption">🌿 Папрат — самоподобие в природата</div></div>
@@ -501,7 +666,129 @@ function spawnFloat() {
 }
 setInterval(spawnFloat, 1500);
 
-// ── NAVIGATION ──
+// ── FIBONACCI SEQUENCE VIZ ──
+function buildFibViz() {
+  const container = document.getElementById('fibViz');
+  if(!container) return;
+  const fibs = [0,1,1,2,3,5,8,13,21,34,55,89];
+  container.innerHTML = '';
+  fibs.forEach((n, i) => {
+    const el = document.createElement('div');
+    el.className = 'fib-num' + (n >= 13 ? ' big' : '');
+    el.textContent = n;
+    container.appendChild(el);
+    if(i < fibs.length - 1) {
+      const plus = document.createElement('span');
+      plus.className = 'fib-plus';
+      plus.textContent = i % 3 === 2 ? '' : '+';
+      container.appendChild(plus);
+    }
+  });
+  // animate in one by one
+  const nums = container.querySelectorAll('.fib-num');
+  nums.forEach((el, i) => {
+    setTimeout(() => el.classList.add('visible'), 200 + i * 120);
+  });
+}
+
+// ── GOLDEN SPIRAL CANVAS ──
+function drawGoldenSpiral() {
+  const canvas = document.getElementById('spiralCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Use Fibonacci numbers scaled to canvas
+  // Classic layout: 144x89 rectangle
+  const scale = Math.min((W - 40) / 144, (H - 40) / 89);
+  const ox = (W - 144 * scale) / 2;
+  const oy = (H - 89 * scale) / 2;
+
+  // s = unit = scale
+  const s = scale;
+
+  // Squares in order with their top-left corners and arc pivot corners:
+  // Each arc's center is the INNER corner of the square being drawn
+  //
+  // Layout (Fibonacci 89+55=144 wide, 89 tall):
+  // [  89x89  |   55x34  ]
+  //           | [34x34]  |
+  //           | [21x21+13]
+  //
+  // Standard golden spiral square placement:
+  // sq1: 89x89  at (ox, oy)               → arc center: bottom-right = (ox+89s, oy+89s), 180°→270°
+  // sq2: 55x55  at (ox+89s, oy)           → arc center: bottom-left  = (ox+89s, oy+55s), 270°→360°
+  // sq3: 34x34  at (ox+89s, oy+55s)       → arc center: top-left     = (ox+89s, oy+55s), 0°→90°  ← WAIT, need top-right
+  // Let me use the definitive approach: track rect and corner
+
+  const rects = [];
+  const arcs = [];
+  let rx = ox, ry = oy, rw = 144*s, rh = 89*s;
+
+  const dirs = [
+    { cut:'left',   arcCorner: (x,y,w,h,sq) => ({cx: x+sq,   cy: y+sq,   start: Math.PI,     end: 1.5*Math.PI }) },
+    { cut:'bottom', arcCorner: (x,y,w,h,sq) => ({cx: x,       cy: y+sq,   start: 1.5*Math.PI, end: 2*Math.PI   }) },
+    { cut:'right',  arcCorner: (x,y,w,h,sq) => ({cx: x+w-sq, cy: y,       start: 0,           end: 0.5*Math.PI }) },
+    { cut:'top',    arcCorner: (x,y,w,h,sq) => ({cx: x+w,     cy: y+h-sq, start: 0.5*Math.PI, end: Math.PI     }) },
+  ];
+
+  for(let i = 0; i < 7; i++) {
+    const d = dirs[i % 4];
+    let sq;
+    if(d.cut === 'left' || d.cut === 'right') sq = Math.min(rw, rh);
+    else sq = Math.min(rw, rh);
+    sq = (rw > rh) ? rh : rw;
+
+    rects.push({x:rx, y:ry, w:rw, h:rh});
+    const arc = d.arcCorner(rx, ry, rw, rh, sq);
+    arcs.push({...arc, r: sq});
+
+    if(d.cut === 'left')   { rx += sq; rw -= sq; }
+    else if(d.cut === 'bottom') { ry += sq; rh -= sq; }
+    else if(d.cut === 'right')  { rw -= sq; }
+    else                        { rh -= sq; }
+
+    if(rw < 2 || rh < 2) break;
+  }
+
+  // Draw rectangle grid
+  const rectAlpha = [0.22,0.18,0.15,0.12,0.10,0.08,0.06];
+  rects.forEach((r,i) => {
+    ctx.strokeStyle = `rgba(255,215,0,${rectAlpha[i]||0.05})`;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(r.x, r.y, r.w, r.h);
+  });
+
+  // Draw spiral
+  const grad = ctx.createLinearGradient(ox, oy+89*s, ox+144*s, oy);
+  grad.addColorStop(0,   '#FFD700');
+  grad.addColorStop(0.45,'#FF8C00');
+  grad.addColorStop(0.85,'#00E5FF');
+  grad.addColorStop(1,   '#00F5FF');
+
+  ctx.beginPath();
+  arcs.forEach(a => ctx.arc(a.cx, a.cy, a.r, a.start, a.end));
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = 3;
+  ctx.shadowBlur = 20;
+  ctx.shadowColor = 'rgba(255,200,0,0.7)';
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // φ label
+  ctx.font = "bold 13px 'Space Mono', monospace";
+  ctx.fillStyle = 'rgba(255,215,0,0.4)';
+  ctx.fillText('φ = 1.618...', W - 112, H - 8);
+}
+
+// call when page 2 opens
+function initPage2() {
+  buildFibViz();
+  setTimeout(drawGoldenSpiral, 100);
+}
+
+
 let currentPage = 1;
 const overlay = document.getElementById('transOverlay');
 function goToPage(n) {
@@ -514,6 +801,7 @@ function goToPage(n) {
     n>1 ? document.getElementById('navBack').classList.add('visible')
         : document.getElementById('navBack').classList.remove('visible');
     window.scrollTo(0,0);
+    if(n === 2) setTimeout(initPage2, 450);
     overlay.classList.remove('fade-in');
   }, 400);
 }
